@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hacker Terminal</title>
+    <style>
+        body {
+            background-color: black;
+            color: cyan;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px;
+        }
+        #terminal {
+            border: 1px solid cyan;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <pre>
+        ▒███████▒▓█████  ██▀███   ▒█████    ██████  ██░ ██ ▓█████  ██▓     ██▓    
+        ▒ ▒ ▒ ▄▀░▓█   ▀ ▓██ ▒ ██▒▒██▒  ██▒▒██    ▒ ▓██░ ██▒▓█   ▀ ▓██▒    ▓██▒    
+        ░ ▒ ▄▀▒░ ▒███   ▓██ ░▄█ ▒▒██░  ██▒░ ▓██▄   ▒██▀▀██░▒███   ▒██░    ▒██░    
+          ▄▀▒   ░▒▓█  ▄ ▒██▀▀█▄  ▒██   ██░  ▒   ██▒░▓█ ░██ ▒▓█  ▄ ▒██░    ▒██░    
+        ▒███████▒░▒████▒░██▓ ▒██▒░ ████▓▒░▒██████▒▒░▓█▒░██▓░▒████▒░██████▒░██████▒
+        ░▒▒ ▓░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░░ ▒░▒░▒░ ▒ ▒▓▒ ▒ ░ ▒ ░░▒░▒░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░
+        ░░▒ ▒ ░ ▒ ░ ░  ░  ░▒ ░ ▒░  ░ ▒ ▒░ ░ ░▒  ░ ░ ▒ ░▒░ ░ ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░
+        ░ ░ ░ ░ ░   ░     ░░   ░ ░ ░ ░ ▒  ░  ░  ░   ░  ░░ ░   ░     ░ ░     ░ ░   
+          ░ ░       ░  ░   ░         ░ ░        ░   ░  ░  ░   ░  ░    ░  ░    ░  ░
+        ░                                                                                                                                                         
+    </pre>
+    <h1>Sessions</h1>
+    <div id="terminal">
+        <pre id="output"></pre>
+        <form id="command-form">
+            <label for="command" style="color: cyan;">$&nbsp;</label>
+            <input type="text" id="command" name="command" placeholder="Enter a command">
+        </form>
+    </div>
+    <script>
+        const terminal = document.getElementById("terminal");
+        const output = document.getElementById("output");
+        const commandForm = document.getElementById("command-form");
+        const commandInput = document.getElementById("command");
+
+        // Function to add a message when the connection is established
+        function handleConnectionEstablished() {
+            const connectionMessage = document.createElement('p');
+            connectionMessage.style.color = 'green';
+            connectionMessage.innerText = "[+] Connection Established";
+            output.appendChild(connectionMessage);
+        }
+
+        commandForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const command = commandInput.value;
+            commandInput.value = "";
+            executeCommand(command);
+        });
+
+        function executeCommand(command) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/execute", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = xhr.responseText;
+                    output.innerHTML += response + "\n";
+                    terminal.scrollTop = terminal.scrollHeight;
+                }
+            };
+            xhr.send("command=" + encodeURIComponent(command));
+        }
+
+        // Check if a connection is established and add the message
+        if (output.innerText.includes("[+] Connection Established")) {
+            handleConnectionEstablished();
+        }
+    </script>
+</body>
+</html>
