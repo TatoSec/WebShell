@@ -33,9 +33,9 @@ def execute():
     if request.method == 'POST':
         command = request.form['command']
         try:
-            if command == "nc -lvnp 4444":
+            if command == "nc -lvnp 5757":
                 if not connection_established:
-                    subprocess.Popen(["nc", "-lvnp", "4444"])
+                    subprocess.Popen(["nc", "-lvnp", "5757"])
                     time.sleep(1)  # Give time for the listener to start
                     connection_established = True
                 else:
