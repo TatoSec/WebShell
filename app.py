@@ -14,7 +14,7 @@ def start_netcat_listener():
     while True:
         if not connection_established:
             try:
-                subprocess.check_output(["nc", "-lvnp", "4444"])
+                subprocess.check_output(["nc", "-lvnp", "5757"])
                 connection_established = True
             except subprocess.CalledProcessError:
                 pass
